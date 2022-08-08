@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: story-deployment
+  labels:
+    app: story-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: story
+    spec:
+      containers:
+        - name: story
+          image: shykhovmyron/story-app
+          imagePullPolicy: Always
+      restartPolicy: Always
+
+  selector:
+    matchLabels:
+      app: story
