@@ -5,7 +5,7 @@ metadata:
   labels:
     app: story-deployment
 spec:
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -13,10 +13,21 @@ spec:
     spec:
       containers:
         - name: story
-          image: shykhovmyron/story-app
-          imagePullPolicy: Always
+          image: shykhovmyron/story-app:latest
+          env:
+            - name: STORY_FOLDER
+              valueFrom:
+                configMapKeyRef:
+                  name: data-store-env
+                  key: STORY_FOLDER
+          volumeMounts:
+            - mountPath: /app/story
+              name: story-volume
+      volumes:
+        - name: story-volume
+          persistentVolumeClaim:
+            claimName: data-pvc
       restartPolicy: Always
-
   selector:
     matchLabels:
       app: story
